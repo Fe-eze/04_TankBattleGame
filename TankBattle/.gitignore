@@ -73,3 +73,7 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Ignore large starter content folders, if we edit it we'll move it to /content
+Content/StarterContent/Textures/*
+Content/StarterContent/HDRI/*
