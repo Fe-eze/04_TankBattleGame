@@ -5,6 +5,9 @@
 #include "Public/Tank.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
+#include "Runtime/Engine/Classes/GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
 #include "TankPlayerController.generated.h"
 
 /**
@@ -18,6 +21,14 @@ class TANKBATTLE_API ATankPlayerController : public APlayerController
 private:
 	virtual void BeginPlay() override;
 	ATank* GetControlledTank() const;
+	
+	FVector GetReachLineStart();
+	FVector GetReachLineEnd();
+	FVector GetHitLocation();
+
+	float Reach = 200000.f;
+
+	const float GetSightRayHitLocation();
 
 public:
 	virtual void Tick(float DeltaTime) override;
