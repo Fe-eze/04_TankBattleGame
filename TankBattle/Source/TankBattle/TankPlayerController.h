@@ -21,14 +21,8 @@ class TANKBATTLE_API ATankPlayerController : public APlayerController
 private:
 	virtual void BeginPlay() override;
 	ATank* GetControlledTank() const;
-	
-	FVector GetReachLineStart();
-	FVector GetReachLineEnd();
-	FVector GetHitLocation();
 
-	float Reach = 200000.f;
-
-	const float GetSightRayHitLocation();
+	bool GetSightRayHitLocation(FVector &OutHitLocation) const;
 
 public:
 	virtual void Tick(float DeltaTime) override;

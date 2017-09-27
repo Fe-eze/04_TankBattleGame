@@ -24,53 +24,31 @@ void ATankPlayerController::Tick(float DeltaTime)
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	if (!GetControlledTank()) { return; }
-	FVector HitLocation = GetHitLocation();
-	UE_LOG(LogTemp, Warning, TEXT("Aiming at: %s"), *HitLocation.ToString());
-	// Get raytraced location of crosshair point in the world
-	// if it hits any world object
-	// start moving tank barrel towards it
+	
+	FVector HitLocation;
+	if (GetSightRayHitLocation(HitLocation)) // Has a side-effect in that it's going to linetrace
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Aiming at: %s"), *HitLocation.ToString());
+		// TODO: start moving tank barrel towards it
+	}
 }
 
-const float ATankPlayerController::GetSightRayHitLocation()
+// Get raytraced location of crosshair point in the world, true if it hits the landscape
+bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
 {
-	FHitResult HitResult;
-	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
-	bool IsHittingWorld = GetWorld()->LineTraceSingleByObjectType
-	(
-		HitResult,
-		GetReachLineStart(),
-		GetReachLineEnd(),
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_Camera),
-		TraceParameters
-	);
-	return HitResult.Distance;
-}
-
-FVector ATankPlayerController::GetReachLineStart()
-{
-	FVector PlayerViewpointLocation;
-	FRotator PlayerViewpointRotation;
-
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation, OUT PlayerViewpointRotation);
-	return PlayerViewpointLocation;
-}
-
-FVector ATankPlayerController::GetReachLineEnd()
-{
-	FVector PlayerViewpointLocation;
-	FRotator PlayerViewpointRotation;
-
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation, OUT PlayerViewpointRotation);
-	return PlayerViewpointLocation + PlayerViewpointRotation.Vector()*Reach;
-}
-
-FVector ATankPlayerController::GetHitLocation()
-{
-	FVector PlayerViewpointLocation;
-	FRotator PlayerViewpointRotation;
-
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation, OUT PlayerViewpointRotation);
-	return PlayerViewpointLocation + PlayerViewpointRotation.Vector()*GetSightRayHitLocation();
+	OutHitLocation = FVector(1.0f);
+	return true;
+	//FHitResult HitResult;
+	//FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
+	//bool IsHittingWorld = GetWorld()->LineTraceSingleByObjectType
+	//(
+	//	HitResult,
+	//	GetReachLineStart(),
+	//	GetReachLineEnd(),
+	//	FCollisionObjectQueryParams(ECollisionChannel::ECC_Camera),
+	//	TraceParameters
+	//);
+	//return HitResult.Distance;
 }
 
 ATank* ATankPlayerController::GetControlledTank() const {
