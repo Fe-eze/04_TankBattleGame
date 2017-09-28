@@ -33,7 +33,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float CrosshairYLocation = 0.333333;
 
+	UPROPERTY(EditAnywhere)
+	float LineTraceRange = 1000000;
+
 	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+
+	bool GetLookVectorHitLocation(FVector &OutHitLocation, FVector LookDirection) const;
 
 public:
 	virtual void Tick(float DeltaTime) override;

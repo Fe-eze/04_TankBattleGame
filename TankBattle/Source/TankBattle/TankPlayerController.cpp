@@ -28,7 +28,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation)) // Has a side-effect in that it's going to linetrace
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *HitLocation.ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *HitLocation.ToString());
 		// TODO: start moving tank barrel towards it
 	}
 }
@@ -44,27 +44,40 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	// Deproject crosshair screen position to world direction
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation2, LookDirection)) {
-		UE_LOG(LogTemp, Warning, TEXT("Look Direction: %s"), *LookDirection.ToString());
+		// Linetrace along look direction and see what we hit (up to a maximum range)
+		GetLookVectorHitLocation(OutHitLocation, LookDirection);
+
+		// Log out hit direction info
+		UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *OutHitLocation.ToString());
 	}
-	// Linetrace along look direction and see what we hit (up to a maximum range)
+	
 	return true;
-	//FHitResult HitResult;
-	//FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
-	//bool IsHittingWorld = GetWorld()->LineTraceSingleByObjectType
-	//(
-	//	HitResult,
-	//	GetReachLineStart(),
-	//	GetReachLineEnd(),
-	//	FCollisionObjectQueryParams(ECollisionChannel::ECC_Camera),
-	//	TraceParameters
-	//);
-	//return HitResult.Distance;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const 
 {
 	FVector CameraWorldLocation; // To be discarded
 	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraWorldLocation, LookDirection);
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector& OutHitLocation, FVector LookDirection) const
+{
+	FHitResult HitResult;
+	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+
+	if (GetWorld()->LineTraceSingleByChannel
+	(
+		HitResult,
+		StartLocation,
+		StartLocation + LookDirection*LineTraceRange, // Trace End Location
+		ECollisionChannel::ECC_Visibility
+	))
+	{
+		OutHitLocation = HitResult.Location;
+		return true;
+	}
+	OutHitLocation = FVector(0);
+	return false; // Line Trace failure
 }
 
 ATank* ATankPlayerController::GetControlledTank() const {
