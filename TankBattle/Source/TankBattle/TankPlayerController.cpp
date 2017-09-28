@@ -28,8 +28,8 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation)) // Has a side-effect in that it's going to linetrace
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *HitLocation.ToString());
 		// TODO: start moving tank barrel towards it
+		GetControlledTank()->AimAt(HitLocation);
 	}
 }
 
@@ -48,7 +48,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 		GetLookVectorHitLocation(OutHitLocation, LookDirection);
 
 		// Log out hit direction info
-		UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *OutHitLocation.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *OutHitLocation.ToString());
 	}
 	
 	return true;
