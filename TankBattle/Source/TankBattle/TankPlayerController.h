@@ -4,10 +4,11 @@
 
 #include "Public/Tank.h"
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
 #include "Runtime/Engine/Classes/GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Runtime/Core/Public/Math/Vector2D.h"
 #include "TankPlayerController.generated.h"
 
 /**
@@ -19,14 +20,23 @@ class TANKBATTLE_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 private:
-	virtual void BeginPlay() override;
+	// Makes tank barrel start rotating towards the position the crosshair is pointing towards.
+	void AimTowardsCrosshair();
+
 	ATank* GetControlledTank() const;
 
 	bool GetSightRayHitLocation(FVector &OutHitLocation) const;
 
+	UPROPERTY(EditAnywhere)
+	float CrosshairXLocation = 0.5;
+
+	UPROPERTY(EditAnywhere)
+	float CrosshairYLocation = 0.333333;
+
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+
 public:
 	virtual void Tick(float DeltaTime) override;
 	
-	// Makes tank barrel start rotating towards the position the crosshair is pointing towards.
-	void AimTowardsCrosshair();
+	virtual void BeginPlay() override;
 };

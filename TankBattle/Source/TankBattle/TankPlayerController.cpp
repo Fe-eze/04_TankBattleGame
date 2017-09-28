@@ -28,7 +28,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation)) // Has a side-effect in that it's going to linetrace
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Aiming at: %s"), *HitLocation.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Aim Reticule Look Direction: %s"), *HitLocation.ToString());
 		// TODO: start moving tank barrel towards it
 	}
 }
@@ -36,7 +36,17 @@ void ATankPlayerController::AimTowardsCrosshair()
 // Get raytraced location of crosshair point in the world, true if it hits the landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
 {
-	OutHitLocation = FVector(1.0f);
+	// Find crosshair position
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	auto ScreenLocation2 = FVector2D(ViewportSizeX* CrosshairXLocation, ViewportSizeY* CrosshairYLocation);
+
+	// Deproject crosshair screen position to world direction
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation2, LookDirection)) {
+		UE_LOG(LogTemp, Warning, TEXT("Look Direction: %s"), *LookDirection.ToString());
+	}
+	// Linetrace along look direction and see what we hit (up to a maximum range)
 	return true;
 	//FHitResult HitResult;
 	//FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
@@ -49,6 +59,12 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	//	TraceParameters
 	//);
 	//return HitResult.Distance;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const 
+{
+	FVector CameraWorldLocation; // To be discarded
+	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraWorldLocation, LookDirection);
 }
 
 ATank* ATankPlayerController::GetControlledTank() const {
