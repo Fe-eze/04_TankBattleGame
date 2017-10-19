@@ -15,7 +15,8 @@ class TANKBATTLE_API UTankBarrel : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
-	void Elevate(float DegreesPerSecond);	
+	// Make all values conform to constraints set by MaxDegreesPerSecond
+	void Elevate(float RelativeSpeed);	
 	
 private:
 	UPROPERTY(EditAnywhere, Category = Setup)
