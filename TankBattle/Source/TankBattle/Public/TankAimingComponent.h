@@ -12,7 +12,6 @@
 //Forward Declaration
 class UTankBarrel; 
 
-// Holds Barrel's properties
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TANKBATTLE_API UTankAimingComponent : public UActorComponent
 {
@@ -25,6 +24,8 @@ public:
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
+
+	//void SetTurretReference()
 	
 private:
 	UTankBarrel* Barrel = nullptr;

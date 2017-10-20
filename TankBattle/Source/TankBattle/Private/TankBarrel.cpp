@@ -4,7 +4,6 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Components/SceneComponent.h"
-#include "Runtime/Engine/Classes/Engine/World.h"
 
 void UTankBarrel::Elevate(float RelativeSpeed) 
 {

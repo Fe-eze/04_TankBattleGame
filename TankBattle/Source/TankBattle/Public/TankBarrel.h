@@ -5,9 +5,7 @@
 #include "CoreMinimal.h"
 #include "TankBarrel.generated.h"
 
-/**
- * 
- */
+// Holds Barrel's properties
 UCLASS(meta = (BlueprintSpawnableComponent), hidecategories = "Collision")
 class TANKBATTLE_API UTankBarrel : public UStaticMeshComponent
 {
