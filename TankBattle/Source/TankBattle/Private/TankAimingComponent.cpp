@@ -40,13 +40,15 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		
 			MoveBarrelTowards(AimDirection);
 
-			auto Time = GetWorld()->GetTimeSeconds();
-			UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), Time);
+			MoveTurretTowards(AimDirection);
+
+			//auto Time = GetWorld()->GetTimeSeconds();
+			//UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), Time);
 		}
 		else 
 		{
-			auto Time = GetWorld()->GetTimeSeconds();
-			UE_LOG(LogTemp, Warning, TEXT("%f: No Aim solve found"), Time);
+			//auto Time = GetWorld()->GetTimeSeconds();
+			//UE_LOG(LogTemp, Warning, TEXT("%f: No Aim solve found"), Time);
 		}
 }
 
@@ -60,12 +62,24 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	Barrel->Elevate(DeltaRotator.Pitch);
 }
 
+void UTankAimingComponent::MoveTurretTowards(FVector AimDirection)
+{
+	// First, work out difference between turret rotation and reticule(aimdirection)
+	auto TurretRotator = Turret->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - TurretRotator;
+
+	Turret->Traverse(DeltaRotator.Yaw);
+}
+
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) 
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if (!TurretToSet) { return; }
 	Turret = TurretToSet;
 }
