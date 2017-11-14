@@ -19,4 +19,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 	
+	UPROPERTY(EditDefaultsOnly)
+	float MaxTrackDrivingForce = 536400; //'Sensible' default is based on a 60ton tank with 0-20mph(0-32.1869kmh) acceleration of 7.2sec ie 8.94m/s
 };
